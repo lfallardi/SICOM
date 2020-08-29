@@ -19,6 +19,15 @@ function clsContacto(id, contacto, cargo, tipo_Contacto, valor) {
   this.valor = valor;
 }
 
+// constructor de clase para la generacion del JSON
+function clsEmpresas(NombreTabla, Top, Metodo, Data, Condicion) {
+  this.NombreTabla = NombreTabla;
+  this.Top = Top;
+  this.Metodo = Metodo;
+  this.Data = Data;
+  this.Condicion = Condicion;
+}
+
 @Component({
   selector: 'app-new-empresa',
   templateUrl: './new-empresa.component.html',
@@ -65,6 +74,7 @@ export class NewEmpresaComponent implements OnInit {
       Referencia: '',
       Pais: '',
       Pronvicias: '',
+      Fecha: '',
       Observaciones: '',
       NombreContacto: '',
       Cargo: '',
@@ -108,8 +118,40 @@ export class NewEmpresaComponent implements OnInit {
     });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
-      this.alert.success('Se creo la empresa satisfactoriamente');
-      this.onConfirmComplete.emit();
+      this.spinner.show();
+      let Empresas = [];
+      let rta;
+
+      const empresa = new clsEmpresas('Empresas_Ins', 1, 'spexec',
+                                      '{"Id_Grupo":' + 1 +
+                                     ', "Codigo":"' + this.formNuevaEmpresa.controls.Codigo.value + '"' +
+                                     ', "Decripcion":"' + this.formNuevaEmpresa.controls.Empresa.value + '"' + 
+                                     ', "Id_Tipo_Empresa":' + this.formNuevaEmpresa.controls.TipoEmpresa.value +
+                                     ', "Id_Organismo":' + this.formNuevaEmpresa.controls.Organismo.value +
+                                     ', "Id_Provincia":' + this.formNuevaEmpresa.controls.Pronvicias.value +
+                                     ', "Fecha":"' + this.datepipe.transform(this.formNuevaEmpresa.controls.Fecha.value, 'yyyyMMdd HH:mm:ss') + '"' +
+                                     ', "Direccion":"' + this.formNuevaEmpresa.controls.Direccion.value + '"' +
+                                     ', "Altura":"' + this.formNuevaEmpresa.controls.Altura.value + '"' +
+                                     ', "Contacto":"' + this.formNuevaEmpresa.controls.Contacto.value + '"' +
+                                     ', "Telefono":"' + this.formNuevaEmpresa.controls.Telefono.value + '"' +
+                                     ', "Email":"' + this.formNuevaEmpresa.controls.Email.value + '"' +
+                                     ', "Referencia":"' + this.formNuevaEmpresa.controls.Referencia.value + '"' +
+                                     ', "Observaciones":"' + this.formNuevaEmpresa.controls.Observaciones.value + '"' + '}', '');
+
+      Empresas.push(empresa);
+
+      this.service.post(Empresas).subscribe(response => { rta = response;
+                                                           if (rta.hasErrorId > 0) {
+                                                             this.spinner.hide();
+                                                             return this.alert.error(rta.descriptionError);
+                                                           }
+                                                           this.spinner.hide();
+                                                           this.alert.success('Se creo la empresa satisfactoriamente');
+                                                           this.onConfirmComplete.emit();
+                                                         }, errorResponse => { this.spinner.hide();
+                                                                               errorResponse.error.Errors.array.forEach(element => this.alert.error(element));
+      });
+      
     });
   }
 

@@ -8,6 +8,8 @@ import { ModalService } from 'src/services/modal.service';
 import { paises, provincias } from 'src/model/Ubicaciones';
 import { ModalConfirmComponent } from 'src/app/common/modal-confirm/modal-confirm.component';
 import { ModalConfig } from 'src/app/common/modal-confirm/model/ModalConfig';
+import { DatePipe } from '@angular/common';
+import { SpinnerService } from 'src/services/spinner.service';
 
 function clsContacto(id, contacto, cargo, tipo_Contacto, valor) {
   this.id = id;
@@ -15,6 +17,14 @@ function clsContacto(id, contacto, cargo, tipo_Contacto, valor) {
   this.cargo = cargo;
   this.tipo_Contacto = tipo_Contacto;
   this.valor = valor;
+}
+
+function clsEmpresas(NombreTabla, Top, Metodo, Data, Condicion) {
+  this.NombreTabla = NombreTabla;
+  this.Top = Top;
+  this.Metodo = Metodo;
+  this.Data = Data;
+  this.Condicion = Condicion;
 }
 
 @Component({
@@ -38,8 +48,8 @@ export class EditEmpresaComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   constructor(@Inject(MAT_DIALOG_DATA) public empresaDet: empresas,
-              private service: ServiceGen, private fb: FormBuilder,
-              private alert: AlertService, private modalService: ModalService) {
+              private service: ServiceGen, private fb: FormBuilder, private spinner: SpinnerService,
+              private alert: AlertService, private modalService: ModalService, private datepipe: DatePipe) {
                 console.log(this.empresaDet);
                 this.loadPaises();
                 this.loadProvincias(this.empresaDet.id_Pais);
@@ -155,8 +165,62 @@ export class EditEmpresaComponent implements OnInit {
     });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
-      this.alert.success('Se modifico la empresa satisfactoriamente');
-      this.onEditComplete.emit();
+      this.spinner.show();
+      let Empresas = [];
+      let rta;
+
+      const empresa = new clsEmpresas('Empresas_Upd', 1, 'spexec',
+                                    '{"Id_Grupo":' + 1 +
+                                   ', "Id_Empresa":' + this.empresaDet.id_Empresa +
+                                   ', "Codigo":"' + this.formNuevaEmpresa.controls.Codigo.value + '"' +
+                                   ', "Decripcion":"' + this.formNuevaEmpresa.controls.Empresa.value + '"' + 
+                                   ', "Id_Tipo_Empresa":' + this.formNuevaEmpresa.controls.TipoEmpresa.value +
+                                   ', "Id_Organismo":' + this.formNuevaEmpresa.controls.Organismo.value +
+                                   ', "Id_Provincia":' + this.formNuevaEmpresa.controls.Pronvicias.value +
+                                   ', "Fecha":"' + this.datepipe.transform(this.empresaDet.fecha, 'yyyyMMdd HH:mm:ss') + '"' +
+                                   ', "Direccion":"' + this.formNuevaEmpresa.controls.Direccion.value + '"' +
+                                   ', "Altura":"' + this.formNuevaEmpresa.controls.Altura.value + '"' +
+                                   ', "Contacto":"' + this.formNuevaEmpresa.controls.Contacto.value + '"' +
+                                   ', "Telefono":"' + this.formNuevaEmpresa.controls.Telefono.value + '"' +
+                                   ', "Email":"' + this.formNuevaEmpresa.controls.Email.value + '"' +
+                                   ', "Referencia":"' + this.formNuevaEmpresa.controls.Referencia.value + '"' +
+                                   ', "Observaciones":"' + this.formNuevaEmpresa.controls.Observaciones.value + '"' + '}', '');
+
+      Empresas.push(empresa);
+
+      if (this.dataSourceContactos.data.length > 0 ) {
+        const contacto = new clsEmpresas('Contactos_Del', 1, 'spexec',
+                                       '{"Id_Grupo":' + 1 +
+                                      ', "Id_Empresa":' + this.empresaDet.id_Empresa +
+                                      ', "Id_Contacto":' + 0 + '}', '');
+  
+        Empresas.push(contacto);
+      }
+
+      this.dataSourceContactos.data.forEach(element => {
+        const newContacto = new clsEmpresas('Contactos_Ins', 1, 'spexec',
+                                          '{"Id_Grupo":' + 1 +
+                                         ', "Id_Empresa":' + this.empresaDet.id_Empresa +
+                                         ', "Contacto":"' + element.contacto + '"' +
+                                         ', "Cargo":"' + element.cargo + '"' + 
+                                         ', "Tipo_Contacto":"' + element.tipo_Contacto + '"' +
+                                         ', "Valor":"' + element.valor + '"' + '}', '');
+
+        Empresas.push(newContacto);
+      });
+      
+      this.service.post(Empresas).subscribe(response => { rta = response;
+                                                          if (rta.hasErrorId > 0) {
+                                                            this.spinner.hide();
+                                                            return this.alert.error(rta.descriptionError);
+                                                          }
+                                                          this.spinner.hide();
+                                                          this.alert.success('Se modifico la empresa satisfactoriamente');
+                                                          this.onEditComplete.emit();
+                                                        }, errorResponse => { this.spinner.hide();
+                                                                              errorResponse.error.Errors.array.forEach(element => this.alert.error(element));
+                                                  });
+
     });
   }
 
