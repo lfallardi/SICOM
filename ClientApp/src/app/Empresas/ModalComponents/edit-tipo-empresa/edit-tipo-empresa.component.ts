@@ -9,6 +9,15 @@ import { SpinnerService } from 'src/services/spinner.service';
 import { ModalConfirmComponent } from 'src/app/common/modal-confirm/modal-confirm.component';
 import { ModalConfig } from 'src/app/common/modal-confirm/model/ModalConfig';
 
+// constructor de clase para la generacion del JSON
+function clsTipoEmpresas(NombreTabla, Top, Metodo, Data, Condicion) {
+  this.NombreTabla = NombreTabla;
+  this.Top = Top;
+  this.Metodo = Metodo;
+  this.Data = Data;
+  this.Condicion = Condicion;
+}
+
 @Component({
   selector: 'app-edit-tipo-empresa',
   templateUrl: './edit-tipo-empresa.component.html',
@@ -45,6 +54,27 @@ export class EditTipoEmpresaComponent implements OnInit {
     });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
+      this.spinner.show();
+      let TiposEmpreas = [];
+      let rta;
+
+      const tipoEmpresa = new clsTipoEmpresas('Tipos_Empresas_Upd', 1, 'spexec',
+                                            '{"Id_Tipo_Empresa":' + this.tipoEmpresaDet.id_Tipo_Empresa + 
+                                           ', "Descripciopn":"' + this.formTipoEmpresa.controls.TipoEmpresa.value + '"' + '}', '');
+
+      TiposEmpreas.push(tipoEmpresa);
+
+      this.service.post(TiposEmpreas).subscribe(response => { rta = response;
+                                                           if (rta.hasErrorId > 0) {
+                                                             this.spinner.hide();
+                                                             return this.alert.error(rta.descriptionError);
+                                                           }
+                                                           this.spinner.hide();
+                                                           this.alert.success('Se modifico el organismo satisfactoriamente');
+                                                           this.onEditComplete.emit();
+                                                         }, errorResponse => { this.spinner.hide();
+                                                                               errorResponse.error.Errors.array.forEach(element => this.alert.error(element));
+      });
       this.alert.success('Se modifico el tipo de empresa satisfactoriamente');
       this.onEditComplete.emit();
     });

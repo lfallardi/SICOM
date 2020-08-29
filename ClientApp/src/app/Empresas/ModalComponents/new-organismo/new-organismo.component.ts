@@ -52,6 +52,7 @@ export class NewOrganismoComponent implements OnInit {
     });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
+      this.spinner.show();
       let Organismo = [];
       let rta;
 
