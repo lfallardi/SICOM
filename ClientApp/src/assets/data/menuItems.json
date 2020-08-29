@@ -1,0 +1,36 @@
+{
+    "menuItems": [
+        {
+            "routePath": "/empresas",
+            "description": "Empresas",
+            "disabled": false,
+            "show": false,
+            "icon": "business",
+            "subItems": []
+        },
+        {
+            "routePath": "/tipoEmpresas",
+            "description": "Tipos de empresas",
+            "disabled": false,
+            "show": false,
+            "icon": "format_list_numbered",
+            "subItems": []
+        },
+        {
+            "routePath": "/organismos",
+            "description": "Organismos",
+            "disabled": false,
+            "show": false,
+            "icon": "polymer",
+            "subItems": []
+        },
+        {
+            "routePath": "/registros",
+            "description": "Registros",
+            "disabled": false,
+            "show": false,
+            "icon": "phone",
+            "subItems": []
+        }
+    ]
+}

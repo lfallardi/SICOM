@@ -1,0 +1,50 @@
+<div>
+  <mat-card class="card-container">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <div class="row filtroRapidoPlusActions">
+          <div>
+            <form [formGroup]="AdminTipoEmpresas">
+              <mat-form-field class="col-12">
+                <input matInput id="FiltroRapido" placeholder="Filtro Rápido"
+                       formControlName="FiltroRapido" (keyup)="applyFilter()">
+              </mat-form-field>
+            </form>
+          </div>
+          <div>
+            <button mat-raised-button class="ActionsFiltersButtons" title="Buscar"><mat-icon>search</mat-icon></button>
+            <button mat-raised-button class="ActionsFiltersButtons" title="Limpiar Filtros"><mat-icon>delete_sweep</mat-icon></button>
+            <button mat-raised-button class="ActionsFiltersButtons" title="Nuevo organismo" (click)="openNewTipoEmpresa()"><mat-icon>add</mat-icon></button>
+          </div>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-card-content>
+      <mat-table [dataSource]="dataSource">
+        <!-- Name Column -->
+        <ng-container matColumnDef="tipoEmpresa">
+          <mat-header-cell *matHeaderCellDef>Tipo de empresa</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.descripciopn}}</mat-cell>
+        </ng-container>
+      
+        <!-- Edit Column -->
+        <ng-container matColumnDef="editar">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element" class="actionsTable">
+            <button mat-icon-button class="mat-button-edit" color="primary" (click)="openEditTipoEmpresa(element)">
+              <mat-icon title="Editar empresa" class="fa fa-edit" style="font-size: 23px;"></mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+      
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <mat-paginator [length]="100"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButton>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

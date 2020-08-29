@@ -1,0 +1,62 @@
+<div>
+  <mat-card class="card-container">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <div class="row filtroRapidoPlusActions">
+          <div>
+            <form [formGroup]="AdminEmpresas">
+              <mat-form-field class="col-12">
+                <input matInput id="FiltroRapido" placeholder="Filtro Rápido"
+                       formControlName="FiltroRapido" (keyup)="applyFilter()">
+              </mat-form-field>
+            </form>
+          </div>
+          <div>
+            <button mat-raised-button class="ActionsFiltersButtons" title="Buscar"><mat-icon>search</mat-icon></button>
+            <button mat-raised-button class="ActionsFiltersButtons" title="Limpiar Filtros"><mat-icon>delete_sweep</mat-icon></button>
+            <button mat-raised-button class="ActionsFiltersButtons" title="Nueva Empresa" (click)="openNewEmpresa()"><mat-icon>add</mat-icon></button>
+          </div>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-card-content>
+      <mat-table [dataSource]="dataSource">
+        <!-- Position Column -->
+        <ng-container matColumnDef="codigo">
+          <mat-header-cell *matHeaderCellDef>Código</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.codigo}}</mat-cell>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="empresa">
+          <mat-header-cell *matHeaderCellDef>Empresa</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.decripcion}}</mat-cell>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="direccion">
+          <mat-header-cell *matHeaderCellDef>Dirección</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.direccion}} {{element.altura}}</mat-cell>
+        </ng-container>
+
+        <!-- Edit Column -->
+        <ng-container matColumnDef="editar">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element" class="actionsTable">
+            <button mat-icon-button class="mat-button-edit" color="primary" (click)="openEditEmpresa(element)">
+              <mat-icon title="Editar empresa" class="fa fa-edit" style="font-size: 23px;"></mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+      
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+
+      <mat-paginator [length]="100"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButton>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

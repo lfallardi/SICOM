@@ -1,0 +1,39 @@
+<ul>
+
+  <ng-container *ngFor="let item of listItems">
+
+    <ng-container *ngIf="item.subItems.length > 0">
+      <a (click)="showElemento(item)" [ngClass]="{disabled: item.disabled}" tabindex="-1">
+        <p [ngClass]="{collapsed: !item.show}">
+
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span class="text-menu">{{ item.description }}</span>
+        </p>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="item.subItems.length === 0">
+      <a [routerLink]="item.routePath" routerLinkActive="active" [ngClass]="{disabled: item.disabled}" tabindex="-1">
+        <p [ngClass]="{collapsed: !item.show}">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span class="text-menu">{{ item.description }}</span>
+        </p>
+      </a>
+    </ng-container>
+
+    <ul class="collapse" [ngClass]="{show: item.show}">
+      <ng-container *ngFor="let subItem of item.subItems">
+        <li>
+          <p [ngClass]="{disabled: subItem.disabled}"><a [routerLink]="subItem.routePath "
+              routerLinkActive="active">{{ subItem.description }}</a></p>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-container>
+  <a (click)="toggleClick()" tabindex="-1" class="close-menu">
+    <p>
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      <span class="text-menu">Cerrar menú</span>
+    </p>
+  </a>
+</ul>

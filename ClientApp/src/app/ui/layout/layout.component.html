@@ -1,0 +1,56 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="big" color="#fff" type="ball-scale-multiple">
+    <p class="spinner">{{spinnerMessage}}</p>
+</ngx-spinner>
+
+
+<mat-toolbar>
+    <mat-toolbar-row>
+        <h1 class="sac" >SICOM</h1>
+        <span class="example-spacer"></span>
+
+        <span data-toggle="tooltip" data-placement="right" title="Usuario">
+            <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="notification">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            <mat-menu #menuUsuario="matMenu">
+                <h6 style="display: inline-block;">{{nombreUsuario}}</h6>
+                <button class="col-2 mat-button-settings" (click)="openCambioSucursal()">
+                    <mat-icon>settings</mat-icon>
+                </button>
+                <mat-divider></mat-divider>
+                <p class="profile">
+                </p>
+                
+            </mat-menu>
+        </span> 
+        
+        <mat-divider [vertical]="true"></mat-divider>
+            <a (click)="logOut()" data-toggle="tooltip" data-placement="right" title="Cerrar sesión" class="logout">
+                <mat-icon>exit_to_app</mat-icon>
+            </a>
+        </mat-toolbar-row>
+
+</mat-toolbar>
+
+<ng-sidebar-container class="full-height wrapper-container">
+
+    <ng-sidebar [(opened)]="_opened" [mode]="'push'" [dock]="true" [dockedSize]="'65px'" [sidebarClass]="'sidebar-menu'">
+        <!-- A sidebar -->
+
+        <ng-container *ngIf="_opened">
+            <app-side-nav (onToggleMenu)="_toggleSidebar()"></app-side-nav>
+        </ng-container>
+        <ng-container *ngIf="!_opened">
+            <app-side-nav-icons (onToggleMenu)="_toggleSidebar()"></app-side-nav-icons>
+        </ng-container>
+
+
+    </ng-sidebar>
+
+    <!-- Page content -->
+    <div ng-sidebar-content class="full-height">
+        <div class="container-fluid full-height">
+            <router-outlet (activate)="onActivate($event)"></router-outlet>
+        </div>
+    </div>
+</ng-sidebar-container>

@@ -1,0 +1,232 @@
+<div class="container">
+  <div class="p-3">
+    <div class="row mb-2">
+      <div class="col">
+        <h2 mat-dialog-title>Nueva empresa</h2>
+      </div>
+      <div class="col float-right crossButtonModal">
+        <button mat-button mat-dialog-close class="btn p-0 cross-button"><mat-icon>close</mat-icon></button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content class="mat-typography">
+
+      <form [formGroup]="formNuevaEmpresa">
+        <mat-tab-group dynamicHeight>
+          <mat-tab label="Empresa">
+            <div class="row">
+              <div class="col-lg-6 col-xs-12">
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Codigo"
+                         name="Codigo"
+                         formControlName="Codigo"
+                         placeholder="Código" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Empresa"
+                         name="Empresa"
+                         formControlName="Empresa"
+                         placeholder="Nombre de empresa" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <mat-select formControlName="TipoEmpresa" placeholder="Tipo de empresa">
+                    <mat-option *ngFor="let tipoEmpresa of tiposEmpresas" [value]="tipoEmpresa.id_Tipo_Empresa">{{tipoEmpresa.descripciopn}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <mat-select formControlName="Organismo" placeholder="Organismo">
+                    <mat-option *ngFor="let organismo of organismos" [value]="organismo.id_Organismo">{{organismo.descripcion}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Contacto"
+                         name="Contacto"
+                         formControlName="Contacto"
+                         placeholder="Contacto" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Telefono"
+                         name="Telefono"
+                         formControlName="Telefono"
+                         placeholder="Telefono" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="email" matInput
+                         id="Email"
+                         name="Email"
+                         formControlName="Email"
+                         placeholder="Email" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Referencia"
+                         name="Referencia"
+                         formControlName="Referencia"
+                         placeholder="Referencia" >
+                </mat-form-field>
+              </div>
+
+              <div class="col-lg-6 col-xs-12">
+                <mat-form-field col-12>
+                  <mat-select formControlName="Pais" placeholder="Pais" (selectionChange)="loadProvincias()">
+                    <mat-option *ngFor="let pais of paises" [value]="pais.id_Pais">{{pais.descripcion}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field col-12>
+                  <mat-select formControlName="Pronvicias" placeholder="Provincia">
+                    <mat-option *ngFor="let prov of provincias" [value]="prov.id_Provincia">{{prov.descripcion}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Direccion"
+                         name="Direccion"
+                         formControlName="Direccion"
+                         placeholder="Dirección" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Altura"
+                         name="Altura"
+                         formControlName="Altura"
+                         placeholder="Altura" >
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Observaciones"
+                         name="Observaciones"
+                         formControlName="Observaciones"
+                         placeholder="Observaciones" >
+                </mat-form-field>
+              </div>
+            </div>
+
+          </mat-tab>
+
+          <mat-tab label="Contacto">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-xl-6 col-xs-12">
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="NombreContacto"
+                         name="NombreContacto"
+                         formControlName="NombreContacto"
+                         placeholder="Contacto" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Cargo"
+                         name="Cargo"
+                         formControlName="Cargo"
+                         placeholder="Cargo" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="TipoContacto"
+                         name="TipoContacto"
+                         formControlName="TipoContacto"
+                         placeholder="Tipo contacto" >
+                </mat-form-field>
+
+                <mat-form-field class="col-12">
+                  <input type="text" matInput
+                         id="Valor"
+                         name="Valor"
+                         formControlName="Valor"
+                         placeholder="Valor" >
+                </mat-form-field>
+
+                <div class="row" style="margin: 0px;">
+                  <div class="col-xl-6 col-xs-12">
+                    <button class="btn btn-outline-primary btn-block btn-lg mr-3" type="button" (click)="LimpiarContactos()">Limpiar</button>
+                  </div>
+                  <div class="col-xl-6 col-xs-12">
+                    <button class="btn btn-primary btn-block btn-lg mr-3" type="button" (click)="AgregarContacto()" [disabled]="mustDisabledAddContact()">Agregar</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-xl-6 table-responsive">
+                <mat-table [dataSource]="dataSourceContactos">
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="nombreContacto">
+                    <mat-header-cell *matHeaderCellDef>Contacto</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.contacto}}</mat-cell>
+                  </ng-container>
+                
+                  <!-- Cargo Column -->
+                  <ng-container matColumnDef="cargo">
+                    <mat-header-cell *matHeaderCellDef>Cargo</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.cargo}}</mat-cell>
+                  </ng-container>
+                
+                  <!-- Tipo contacto Column -->
+                  <ng-container matColumnDef="tipoContacto">
+                    <mat-header-cell *matHeaderCellDef>Tipo de contacto</mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.tipo_Contacto}}</mat-cell>
+                  </ng-container>
+          
+                  <!-- Edit Column -->
+                  <ng-container matColumnDef="eliminar">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index" class="actionsTable">
+                      <button mat-icon-button class="mat-button-edit" color="primary" (click)="deleteContact(i)">
+                        <mat-icon title="Eliminar contacto" style="font-size: 23px;">delete</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                
+                  <mat-header-row *matHeaderRowDef="displayedColumnsContacto"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumnsContacto;"></mat-row>
+                </mat-table>
+          
+                <mat-paginator [length]="100"
+                               [pageSize]="10"
+                               [pageSizeOptions]="[5, 10, 25, 100]">
+                </mat-paginator>
+              </div>
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+      </form>
+
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-actions align="end">
+      <div class="row mt-2">
+        <div class="col-6 matActions">
+          <button class="btn btn-outline-primary btn-lg mr-3" type="button" mat-dialog-close>Cancelar</button>
+        </div>
+        <div class="col-6 matActions">
+          <button class="btn btn-primary btn-lg mr-3" type="button" (click)="AddNewEmpresa()">Aceptar</button>
+        </div>
+      </div>
+    </mat-dialog-actions>
+
+  </div>
+</div>
